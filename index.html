@@ -12,12 +12,49 @@
   *::-webkit-scrollbar{display:none;}
   @keyframes toastIn{ from{opacity:0; transform:translate(-50%,8px);} to{opacity:1; transform:translate(-50%,0);} }
   @keyframes screenIn{ from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
-  .page-wrap{ min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 48px 16px; background: radial-gradient(circle at 20% 10%, #22362E 0%, #0F1815 55%, #0A100E 100%); font-family: 'Manrope',sans-serif; }
-  .page-col{ display:flex; flex-direction:column; align-items:center; gap:18px; }
+  .page-wrap{ min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 32px 16px; background: radial-gradient(circle at 20% 10%, #22362E 0%, #0F1815 55%, #0A100E 100%); font-family: 'Manrope',sans-serif; }
+  .page-col{ display:flex; flex-direction:column; align-items:center; gap:16px; }
   .kicker{ color:#D9BD87; font-size:12px; letter-spacing:0.28em; text-transform:uppercase; opacity:0.75; font-weight:700; }
-  .phone{ width:402px; max-width:92vw; height:874px; max-height:82vh; border-radius:66px; padding:14px; background:linear-gradient(160deg,#5c5c5e,#333335 45%,#1c1c1e 100%); box-shadow:0 45px 100px -20px rgba(0,0,0,0.75), 0 0 0 1px rgba(255,255,255,0.06), inset 0 0 0 1.5px rgba(255,255,255,0.14), inset 0 -2px 4px rgba(0,0,0,0.5); position:relative; }
-  .screen{ width:100%; height:100%; background:#F6F1E6; overflow:hidden; position:relative; display:flex; flex-direction:column; border-radius:52px; }
-  .notch{ position:absolute; top:10px; left:50%; transform:translateX(-50%); width:120px; height:28px; background:#1c1c1e; border-radius:16px; z-index:50; }
+
+  /* iPhone mockup: fixed logical size 402x874, uniformly scaled via JS transform so it never stretches or crops */
+  .phone-stage{ position:relative; }
+  .phone{
+    width:402px; height:874px;
+    border-radius:66px;
+    padding:14px;
+    background:linear-gradient(160deg,#6a6a6c,#3a3a3c 40%,#1c1c1e 100%);
+    box-shadow:
+      0 50px 110px -20px rgba(0,0,0,0.8),
+      0 0 0 1px rgba(255,255,255,0.05),
+      inset 0 0 0 2px rgba(255,255,255,0.16),
+      inset 0 0 0 4px rgba(0,0,0,0.35),
+      inset 0 -3px 6px rgba(0,0,0,0.5);
+    position:relative;
+    transform-origin: top left;
+    flex:0 0 auto;
+  }
+  .phone::before{
+    content:''; position:absolute; inset:0; border-radius:66px; pointer-events:none;
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.35), inset 0 -1px 1px rgba(0,0,0,0.4);
+  }
+  .screen{ width:100%; height:100%; background:#F6F1E6; overflow:hidden; position:relative; display:flex; flex-direction:column; border-radius:54px; }
+  #screen-root{ position:relative; width:100%; height:100%; display:flex; flex-direction:column; }
+
+  .side-btn{ position:absolute; background:linear-gradient(90deg,#232325,#3a3a3c); z-index:0; }
+  .btn-mute{ left:-3px; top:120px; width:3px; height:32px; border-radius:2px 0 0 2px; }
+  .btn-vol-up{ left:-3px; top:184px; width:3px; height:56px; border-radius:2px 0 0 2px; }
+  .btn-vol-down{ left:-3px; top:252px; width:3px; height:56px; border-radius:2px 0 0 2px; }
+  .btn-power{ right:-3px; top:210px; width:3px; height:90px; border-radius:0 2px 2px 0; }
+
+  .island{ position:absolute; top:25px; left:50%; transform:translateX(-50%); width:118px; height:35px; background:#000; border-radius:20px; z-index:60; display:flex; align-items:center; justify-content:flex-end; padding-right:10px; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04); }
+  .island-cam{ width:9px; height:9px; border-radius:50%; background:radial-gradient(circle at 35% 35%, #3a4a6a, #0a0e16 70%); box-shadow:0 0 0 1.5px rgba(255,255,255,0.03); }
+
+  .status-bar{ position:absolute; top:0; left:0; right:0; height:54px; z-index:55; display:flex; align-items:flex-end; justify-content:space-between; padding:0 26px 8px; pointer-events:none; transition:color .2s ease; }
+  .status-bar .time{ font-size:15px; font-weight:700; letter-spacing:0.01em; }
+  .status-bar .icons{ display:flex; align-items:center; gap:5px; }
+
+  .home-indicator{ position:absolute; bottom:7px; left:50%; transform:translateX(-50%); width:134px; height:5px; border-radius:3px; background:currentColor; opacity:0.9; z-index:70; pointer-events:none; }
+
   .hint{ max-width:390px; text-align:center; color:#8B9B90; font-size:12px; font-weight:600; line-height:1.6; }
   button{ font-family:'Manrope',sans-serif; }
   .btn:active{ transform:scale(0.97); }
@@ -31,9 +68,26 @@
 <div class="page-wrap">
   <div class="page-col">
     <div class="kicker">Trustum Group · Демо мобильного приложения</div>
-    <div class="phone">
-      <div class="notch"></div>
-      <div class="screen" id="screen-root"></div>
+    <div class="phone-stage" id="phone-stage">
+      <div class="phone" id="phone">
+        <div class="side-btn btn-mute"></div>
+        <div class="side-btn btn-vol-up"></div>
+        <div class="side-btn btn-vol-down"></div>
+        <div class="side-btn btn-power"></div>
+        <div class="screen">
+          <div id="screen-root"></div>
+          <div class="status-bar" id="status-bar">
+            <div class="time">9:41</div>
+            <div class="icons">
+              <svg width="17" height="11" viewBox="0 0 17 11" fill="none"><rect x="0" y="6" width="3" height="5" rx="0.7" fill="currentColor"/><rect x="4.5" y="4" width="3" height="7" rx="0.7" fill="currentColor"/><rect x="9" y="2" width="3" height="9" rx="0.7" fill="currentColor"/><rect x="13.5" y="0" width="3" height="11" rx="0.7" fill="currentColor"/></svg>
+              <svg width="15" height="11" viewBox="0 0 15 11" fill="none"><path d="M7.5 9.3a1.1 1.1 0 100-2.2 1.1 1.1 0 000 2.2z" fill="currentColor"/><path d="M4.2 5.6a4.7 4.7 0 016.6 0" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none"/><path d="M1.7 3.1a8.3 8.3 0 0111.6 0" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none"/></svg>
+              <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="0.75" y="0.75" width="20.5" height="10.5" rx="2.8" stroke="currentColor" stroke-width="1" opacity="0.5"/><rect x="2.3" y="2.3" width="16" height="7.4" rx="1.6" fill="currentColor"/><rect x="22" y="4" width="1.8" height="4" rx="0.9" fill="currentColor" opacity="0.5"/></svg>
+            </div>
+          </div>
+          <div class="island"><div class="island-cam"></div></div>
+          <div class="home-indicator" id="home-indicator"></div>
+        </div>
+      </div>
     </div>
     <div class="hint">Интерактивный прототип — переключайте вкладки внизу экрана и нажимайте на карточки объектов, как в настоящем приложении.</div>
   </div>
@@ -187,7 +241,7 @@
 
     return '' +
     '<div style="height:100%; display:flex; flex-direction:column; animation:screenIn .32s cubic-bezier(0.22,1,0.36,1);">' +
-      '<div style="height:40px; flex:0 0 auto;"></div>' +
+      '<div style="height:58px; flex:0 0 auto;"></div>' +
       '<div style="flex:1; overflow-y:auto; position:relative;">' +
         '<div style="padding:6px 20px 14px;">' +
           '<div style="display:flex; justify-content:space-between; align-items:flex-start;">' +
@@ -239,7 +293,7 @@
 
     return '' +
     '<div style="height:100%; display:flex; flex-direction:column; animation:screenIn .32s cubic-bezier(0.22,1,0.36,1);">' +
-      '<div style="height:40px; flex:0 0 auto;"></div>' +
+      '<div style="height:58px; flex:0 0 auto;"></div>' +
       '<div style="flex:1; overflow-y:auto; position:relative;">' +
         '<div style="padding:6px 20px 14px;">' +
           '<div style="font-family:\'Fraunces\',serif; font-size:22px; color:#12201C; margin-top:6px;">Поиск объектов</div>' +
@@ -323,7 +377,7 @@
     }
     return '' +
     '<div style="height:100%; display:flex; flex-direction:column; animation:screenIn .32s cubic-bezier(0.22,1,0.36,1);">' +
-      '<div style="height:40px; flex:0 0 auto;"></div>' +
+      '<div style="height:58px; flex:0 0 auto;"></div>' +
       '<div style="flex:1; overflow-y:auto; position:relative;">' +
         '<div style="font-family:\'Fraunces\',serif; font-size:24px; color:#12201C; padding:8px 20px 4px;">Избранное</div>' +
         '<div style="font-size:12.5px; color:#7C7565; padding:0 20px 14px; font-weight:600;">' + favList.length + ' сохранённых объекта</div>' +
@@ -347,7 +401,7 @@
     }).join('');
     return '' +
     '<div style="height:100%; display:flex; flex-direction:column; animation:screenIn .32s cubic-bezier(0.22,1,0.36,1);">' +
-      '<div style="height:40px; flex:0 0 auto;"></div>' +
+      '<div style="height:58px; flex:0 0 auto;"></div>' +
       '<div style="flex:1; overflow-y:auto; position:relative;">' +
         '<div style="font-family:\'Fraunces\',serif; font-size:24px; color:#12201C; padding:8px 20px 4px;">Профиль</div>' +
         '<div style="margin:16px 20px 18px; background:#12201C; border-radius:18px; padding:20px; display:flex; align-items:center; gap:14px; position:relative; overflow:hidden;">' +
@@ -360,6 +414,9 @@
       bottomNav('profile') +
     '</div>';
   }
+
+  // dark hero photo under status bar on the detail screen too, so status bar stays light there
+  var LIGHT_TEXT_SCREENS = { onboard: true, detail: true };
 
   function render(){
     var root = document.getElementById('screen-root');
@@ -375,8 +432,32 @@
       html += '<div style="position:absolute; bottom:96px; left:50%; transform:translateX(-50%); background:#12201C; color:#D9BD87; padding:11px 18px; border-radius:12px; font-size:12.5px; font-weight:700; z-index:999; box-shadow:0 10px 30px rgba(0,0,0,0.3); white-space:nowrap; animation:toastIn 0.25s ease;">' + esc(state.toast) + '</div>';
     }
     root.innerHTML = html;
+
+    var isLight = !!LIGHT_TEXT_SCREENS[state.screen];
+    var color = isLight ? '#FFFDF9' : '#12201C';
+    var statusBar = document.getElementById('status-bar');
+    var homeIndicator = document.getElementById('home-indicator');
+    if (statusBar) statusBar.style.color = color;
+    if (homeIndicator) homeIndicator.style.color = color;
   }
 
+  // Scale the whole phone mockup to fit the viewport without ever distorting or cropping it.
+  function fitPhone(){
+    var stage = document.getElementById('phone-stage');
+    var phone = document.getElementById('phone');
+    var reserveH = 150; // space for kicker text above + hint text below
+    var reserveW = 32;
+    var maxW = window.innerWidth - reserveW;
+    var maxH = window.innerHeight - reserveH;
+    var scale = Math.min(1, maxW / 402, maxH / 874);
+    if (!isFinite(scale) || scale <= 0) scale = 1;
+    phone.style.transform = 'scale(' + scale + ')';
+    stage.style.width = (402 * scale) + 'px';
+    stage.style.height = (874 * scale) + 'px';
+  }
+
+  window.addEventListener('resize', fitPhone);
+  fitPhone();
   render();
 })();
 </script>
