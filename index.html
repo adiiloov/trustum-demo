@@ -1,18 +1,19 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Trustum Group — Демо мобильного приложения</title>
+<title>Trustum Group — Mobile App Demo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; }
+  html{ -webkit-tap-highlight-color: transparent; }
   body{margin:0;background:#0A100E;}
   *::-webkit-scrollbar{display:none;}
   @keyframes toastIn{ from{opacity:0; transform:translate(-50%,8px);} to{opacity:1; transform:translate(-50%,0);} }
   @keyframes screenIn{ from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
-  .page-wrap{ min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 32px 16px; background: radial-gradient(circle at 20% 10%, #22362E 0%, #0F1815 55%, #0A100E 100%); font-family: 'Manrope',sans-serif; }
+  .page-wrap{ min-height: 100vh; min-height: 100dvh; display: flex; align-items: center; justify-content: center; padding: 32px 16px; background: radial-gradient(circle at 20% 10%, #22362E 0%, #0F1815 55%, #0A100E 100%); font-family: 'Manrope',sans-serif; }
   .page-col{ display:flex; flex-direction:column; align-items:center; gap:16px; }
   .kicker{ color:#D9BD87; font-size:12px; letter-spacing:0.28em; text-transform:uppercase; opacity:0.75; font-weight:700; }
 
@@ -32,6 +33,7 @@
     position:relative;
     transform-origin: top left;
     flex:0 0 auto;
+    transition: transform .12s ease-out;
   }
   .phone::before{
     content:''; position:absolute; inset:0; border-radius:66px; pointer-events:none;
@@ -57,17 +59,19 @@
 
   .hint{ max-width:390px; text-align:center; color:#8B9B90; font-size:12px; font-weight:600; line-height:1.6; }
   button{ font-family:'Manrope',sans-serif; }
+  .btn, .chip, .card, .icon-btn{ touch-action: manipulation; transition: transform .15s ease; }
   .btn:active{ transform:scale(0.97); }
   .chip:active{ transform:scale(0.94); }
   .card:active{ transform:scale(0.98); }
   .icon-btn:active{ transform:scale(0.9); }
+  [data-scroll]{ scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
 </style>
 </head>
 <body>
 
 <div class="page-wrap">
   <div class="page-col">
-    <div class="kicker">Trustum Group · Демо мобильного приложения</div>
+    <div class="kicker">Trustum Group · Mobile App Demo</div>
     <div class="phone-stage" id="phone-stage">
       <div class="phone" id="phone">
         <div class="side-btn btn-mute"></div>
@@ -89,7 +93,7 @@
         </div>
       </div>
     </div>
-    <div class="hint">Интерактивный прототип — переключайте вкладки внизу экрана и нажимайте на карточки объектов, как в настоящем приложении.</div>
+    <div class="hint">Interactive prototype — switch tabs at the bottom of the screen and tap listing cards, just like in the real app.</div>
   </div>
 </div>
 
@@ -97,19 +101,19 @@
 (function(){
 
   var properties = [
-    { id: 1, tag: 'Новостройка', priceNum: 1450000, name: 'Sedra District', loc: 'Аль-Наргис, Эр-Рияд', city: 'Эр-Рияд', beds: 3, baths: 2, area: 168, floor: 4, deliveryQ: 'Q4 2026', desc: 'Просторные апартаменты в закрытом комплексе Sedra District с видом на внутренний парк. Отделка под ключ, кухня с техникой, подземный паркинг. Рассрочка от застройщика до 60 месяцев без банка.', img: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&q=80', featured: true },
-    { id: 2, tag: 'Вид на море', priceNum: 2100000, name: 'Jeddah Corniche Residence', loc: 'Corniche, Джидда', city: 'Джидда', beds: 4, baths: 3, area: 210, floor: 9, deliveryQ: 'Готово', desc: 'Резиденция на первой линии Corniche с панорамным видом на Красное море, приватный пляж-клуб и консьерж-сервис 24/7.', img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80', featured: true },
-    { id: 3, tag: 'Пентхаус', priceNum: 3800000, name: 'Al Olaya Penthouse', loc: 'Al Olaya, Эр-Рияд', city: 'Эр-Рияд', beds: 5, baths: 4, area: 340, floor: 22, deliveryQ: 'Готово', desc: 'Двухуровневый пентхаус в деловом районе Al Olaya с террасой на крыше, собственным лифтом и видом на King Abdullah Financial District.', img: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?w=600&q=80', featured: true },
-    { id: 4, tag: 'Готово', priceNum: 1250000, name: 'Yasmin Residence', loc: 'Аль-Ясмин, Эр-Рияд', city: 'Эр-Рияд', beds: 3, baths: 2, area: 168, floor: 2, deliveryQ: 'Готово', desc: 'Семейный комплекс закрытого типа с бассейном и парком, рядом международная школа и торговый центр.', img: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&q=80', featured: false },
-    { id: 5, tag: 'Новостройка', priceNum: 980000, name: 'Al Narjis Tower', loc: 'Ан-Нарджис, Эр-Рияд', city: 'Эр-Рияд', beds: 2, baths: 2, area: 121, floor: 6, deliveryQ: 'Q2 2027', desc: 'Компактные апартаменты в новой башне района Ан-Нарджис — отличный вариант для первой покупки или инвестиций.', img: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=600&q=80', featured: false },
-    { id: 6, tag: 'Вид на набережную', priceNum: 1680000, name: 'Corniche View', loc: 'Аль-Хамра, Джидда', city: 'Джидда', beds: 3, baths: 3, area: 190, floor: 12, deliveryQ: 'Готово', desc: 'Апартаменты с видом на набережную Аль-Хамра, в 5 минутах от делового центра Джидды.', img: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&q=80', featured: false },
-    { id: 7, tag: 'Таунхаус', priceNum: 1120000, name: 'Diriyah Gate Homes', loc: 'Эд-Диръия, Эр-Рияд', city: 'Эр-Рияд', beds: 3, baths: 2, area: 142, floor: 3, deliveryQ: 'Q1 2027', desc: 'Таунхаусы рядом с историческим кварталом Эд-Диръия, часть масштабного проекта возрождения района.', img: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600&q=80', featured: false },
-    { id: 8, tag: 'Готово', priceNum: 875000, name: 'Qurtoba Residence', loc: 'Куртоба, Эр-Рияд', city: 'Эр-Рияд', beds: 2, baths: 2, area: 108, floor: 5, deliveryQ: 'Готово', desc: 'Уютные апартаменты в спальном районе Куртоба с развитой инфраструктурой и парковкой во дворе.', img: 'https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=600&q=80', featured: false },
-    { id: 9, tag: 'У воды', priceNum: 1340000, name: 'Al Khobar Marina', loc: 'Марина, Эль-Хубар', city: 'Дамам', beds: 3, baths: 3, area: 175, floor: 8, deliveryQ: 'Q3 2026', desc: 'Апартаменты у набережной марины Эль-Хубар с яхт-клубом и ресторанами на первом этаже.', img: 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=600&q=80', featured: false }
+    { id: 1, tag: 'New building', priceNum: 1450000, name: 'Sedra District', loc: 'Al Narjis, Riyadh', city: 'Riyadh', beds: 3, baths: 2, area: 168, floor: 4, deliveryQ: 'Q4 2026', desc: 'Spacious apartments in the gated Sedra District complex overlooking an inner park. Turnkey finish, fitted kitchen, underground parking. Developer installment plan up to 60 months, no bank required.', img: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&q=80', featured: true },
+    { id: 2, tag: 'Sea view', priceNum: 2100000, name: 'Jeddah Corniche Residence', loc: 'Corniche, Jeddah', city: 'Jeddah', beds: 4, baths: 3, area: 210, floor: 9, deliveryQ: 'Ready', desc: 'Beachfront residence on the Corniche with panoramic Red Sea views, a private beach club, and 24/7 concierge service.', img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80', featured: true },
+    { id: 3, tag: 'Penthouse', priceNum: 3800000, name: 'Al Olaya Penthouse', loc: 'Al Olaya, Riyadh', city: 'Riyadh', beds: 5, baths: 4, area: 340, floor: 22, deliveryQ: 'Ready', desc: 'Two-story penthouse in the Al Olaya business district with a rooftop terrace, private elevator, and views of the King Abdullah Financial District.', img: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?w=600&q=80', featured: true },
+    { id: 4, tag: 'Ready', priceNum: 1250000, name: 'Yasmin Residence', loc: 'Al Yasmin, Riyadh', city: 'Riyadh', beds: 3, baths: 2, area: 168, floor: 2, deliveryQ: 'Ready', desc: 'Gated family complex with a pool and park, close to an international school and a shopping mall.', img: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&q=80', featured: false },
+    { id: 5, tag: 'New building', priceNum: 980000, name: 'Al Narjis Tower', loc: 'Al Narjis, Riyadh', city: 'Riyadh', beds: 2, baths: 2, area: 121, floor: 6, deliveryQ: 'Q2 2027', desc: 'Compact apartments in a new tower in Al Narjis — a great option for a first purchase or investment.', img: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=600&q=80', featured: false },
+    { id: 6, tag: 'Waterfront view', priceNum: 1680000, name: 'Corniche View', loc: 'Al Hamra, Jeddah', city: 'Jeddah', beds: 3, baths: 3, area: 190, floor: 12, deliveryQ: 'Ready', desc: 'Apartments overlooking the Al Hamra waterfront, 5 minutes from downtown Jeddah.', img: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&q=80', featured: false },
+    { id: 7, tag: 'Townhouse', priceNum: 1120000, name: 'Diriyah Gate Homes', loc: 'Diriyah, Riyadh', city: 'Riyadh', beds: 3, baths: 2, area: 142, floor: 3, deliveryQ: 'Q1 2027', desc: 'Townhouses next to the historic Diriyah quarter, part of a large-scale district revival project.', img: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600&q=80', featured: false },
+    { id: 8, tag: 'Ready', priceNum: 875000, name: 'Qurtoba Residence', loc: 'Qurtubah, Riyadh', city: 'Riyadh', beds: 2, baths: 2, area: 108, floor: 5, deliveryQ: 'Ready', desc: 'Cozy apartments in the residential Qurtubah district with developed infrastructure and courtyard parking.', img: 'https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=600&q=80', featured: false },
+    { id: 9, tag: 'Waterfront', priceNum: 1340000, name: 'Al Khobar Marina', loc: 'Marina, Al Khobar', city: 'Dammam', beds: 3, baths: 3, area: 175, floor: 8, deliveryQ: 'Q3 2026', desc: 'Apartments by the Al Khobar marina promenade with a yacht club and ground-floor restaurants.', img: 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=600&q=80', featured: false }
   ];
 
-  var amenitiesList = ['Бассейн', 'Спортзал', 'Охрана 24/7', 'Парковка', 'Детская площадка', 'Мечеть рядом'];
-  var cities = ['Все города', 'Эр-Рияд', 'Джидда', 'Дамам', 'Мекка'];
+  var amenitiesList = ['Pool', 'Gym', '24/7 Security', 'Parking', 'Playground', 'Mosque nearby'];
+  var cities = ['All cities', 'Riyadh', 'Jeddah', 'Dammam', 'Mecca'];
 
   var state = {
     screen: 'onboard',
@@ -121,9 +125,10 @@
     toast: null
   };
   var toastTimer = null;
+  var lastRenderedScreen = null;
 
   function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
-  function fmtPrice(n){ return n.toLocaleString('ru-RU') + ' SAR'; }
+  function fmtPrice(n){ return 'SAR ' + n.toLocaleString('en-US'); }
 
   function go(name){ state.screen = name; render(); }
   function goHome(){ state.screen = 'home'; render(); }
@@ -135,24 +140,23 @@
     if (e) e.stopPropagation();
     var wasFav = state.favorites.has(id);
     if (wasFav) state.favorites.delete(id); else state.favorites.add(id);
-    render();
     return wasFav;
   }
   function toggleFavoriteToast(id, e){
     var wasFav = toggleFavorite(id, e);
-    showToast(wasFav ? 'Удалено из избранного' : 'Добавлено в избранное');
+    showToast(wasFav ? 'Removed from favorites' : 'Added to favorites');
   }
   function showToast(msg){
     clearTimeout(toastTimer);
     state.toast = msg; render();
     toastTimer = setTimeout(function(){ state.toast = null; render(); }, 1800);
   }
-  window.__onWhatsapp = function(){ showToast('Открываем WhatsApp брокера'); };
-  window.__onCall = function(){ showToast('Звонок брокеру Trustum'); };
-  window.__onBookViewing = function(){ showToast('Заявка на показ отправлена брокеру'); };
+  window.__onWhatsapp = function(){ showToast('Opening broker’s WhatsApp'); };
+  window.__onCall = function(){ showToast('Calling Trustum broker'); };
+  window.__onBookViewing = function(){ showToast('Viewing request sent to broker'); };
   window.__go = go; window.__goHome = goHome; window.__goBack = goBack;
   window.__openDetail = openDetail; window.__setCity = setCity; window.__toggleFilter = toggleFilter;
-  window.__toggleFavorite = function(id, e){ toggleFavorite(id, e); };
+  window.__toggleFavorite = function(id, e){ toggleFavorite(id, e); render(); };
   window.__toggleFavoriteToast = toggleFavoriteToast;
 
   function propertyCard(p, favSet){
@@ -167,17 +171,17 @@
         '</div>' +
         '<div style="font-size:13px; font-weight:700; color:#1E2F29; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + esc(p.name) + '</div>' +
         '<div style="font-size:11.5px; color:#7C7565; margin-top:2px; font-weight:600;">' + esc(p.loc) + '</div>' +
-        '<div style="font-size:11px; color:#A79E8B; margin-top:4px; font-weight:600;">' + p.beds + ' спальни · ' + p.area + ' м² · ' + esc(p.deliveryQ) + '</div>' +
+        '<div style="font-size:11px; color:#A79E8B; margin-top:4px; font-weight:600;">' + p.beds + ' bed · ' + p.area + ' m² · ' + esc(p.deliveryQ) + '</div>' +
       '</div>' +
     '</div>';
   }
 
   function bottomNav(active){
     var items = [
-      { key:'home', label:'Главная', onClick:'__go(\'home\')', icon: '<path d="M3 11l9-8 9 8"></path><path d="M5 10v10h14V10"></path>' },
-      { key:'search', label:'Поиск', onClick:'__go(\'search\')', icon: '<circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path>' },
-      { key:'favorites', label:'Избранное', onClick:'__go(\'favorites\')', icon: '<path d="M12 21s-7-4.6-9.5-9C.8 8.4 2.3 5 5.6 5c1.9 0 3.3 1 4.4 2.6C11.1 6 12.5 5 14.4 5c3.3 0 4.8 3.4 3.1 7-2.5 4.4-9.5 9-9.5 9z"></path>' },
-      { key:'profile', label:'Профиль', onClick:'__go(\'profile\')', icon: '<circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"></path>' }
+      { key:'home', label:'Home', onClick:'__go(\'home\')', icon: '<path d="M3 11l9-8 9 8"></path><path d="M5 10v10h14V10"></path>' },
+      { key:'search', label:'Search', onClick:'__go(\'search\')', icon: '<circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path>' },
+      { key:'favorites', label:'Favorites', onClick:'__go(\'favorites\')', icon: '<path d="M12 21s-7-4.6-9.5-9C.8 8.4 2.3 5 5.6 5c1.9 0 3.3 1 4.4 2.6C11.1 6 12.5 5 14.4 5c3.3 0 4.8 3.4 3.1 7-2.5 4.4-9.5 9-9.5 9z"></path>' },
+      { key:'profile', label:'Profile', onClick:'__go(\'profile\')', icon: '<circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"></path>' }
     ];
     var html = '<div style="flex:0 0 auto; display:flex; padding:8px 12px calc(env(safe-area-inset-bottom,0) + 8px); background:#FFFDF9; border-top:1px solid #E2D9C4;">';
     items.forEach(function(it){
@@ -200,12 +204,12 @@
         '<div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; text-align:center; padding:0 34px; z-index:2;">' +
           '<div style="width:78px; height:78px; border:1.5px solid #B9924B; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:\'Fraunces\',serif; font-size:26px; color:#D9BD87; margin-bottom:26px;">TG</div>' +
           '<div style="font-family:\'Fraunces\',serif; font-weight:600; font-size:35px; letter-spacing:0.02em;">TRUSTUM<span style="color:#D9BD87;">.</span></div>' +
-          '<div style="margin-top:16px; color:#C9C2B0; font-size:14.5px; line-height:1.65; font-weight:500; max-width:260px;">Недвижимость Королевства Саудовская Аравия — с проверенными объектами и личным сопровождением сделки</div>' +
+          '<div style="margin-top:16px; color:#C9C2B0; font-size:14.5px; line-height:1.65; font-weight:500; max-width:260px;">Real estate in the Kingdom of Saudi Arabia — verified listings with personal deal support</div>' +
           '<div style="width:46px; height:2px; background:#B9924B; margin:24px auto 0;"></div>' +
         '</div>' +
         '<div style="padding:0 28px; position:relative; z-index:2;">' +
-          '<button class="btn" onclick="__goHome()" style="width:100%; background:#B9924B; color:#20180A; border:none; padding:17px; border-radius:14px; font-weight:700; font-size:15px; cursor:pointer;">Смотреть объекты</button>' +
-          '<button class="btn" onclick="__goHome()" style="width:100%; background:transparent; color:#C9C2B0; border:none; padding:14px; font-size:13.5px; font-weight:600; cursor:pointer; margin-top:4px;">У меня уже есть аккаунт</button>' +
+          '<button class="btn" onclick="__goHome()" style="width:100%; background:#B9924B; color:#20180A; border:none; padding:17px; border-radius:14px; font-weight:700; font-size:15px; cursor:pointer;">Browse Listings</button>' +
+          '<button class="btn" onclick="__goHome()" style="width:100%; background:transparent; color:#C9C2B0; border:none; padding:14px; font-size:13.5px; font-weight:600; cursor:pointer; margin-top:4px;">I already have an account</button>' +
         '</div>' +
       '</div>' +
     '</div>';
@@ -236,28 +240,28 @@
       recommendedBlock = '<div style="padding:2px 20px 20px; display:flex; flex-direction:column; gap:14px;">' +
         recommended.map(function(p){ return propertyCard(p, state.favorites); }).join('') + '</div>';
     } else {
-      recommendedBlock = '<div style="padding:30px 40px 20px; text-align:center; color:#7C7565; font-size:12.5px; font-weight:600; line-height:1.6;">Нет объектов в этом городе — попробуйте выбрать другой</div>';
+      recommendedBlock = '<div style="padding:30px 40px 20px; text-align:center; color:#7C7565; font-size:12.5px; font-weight:600; line-height:1.6;">No listings in this city — try another one</div>';
     }
 
     return '' +
     '<div style="height:100%; display:flex; flex-direction:column; animation:screenIn .32s cubic-bezier(0.22,1,0.36,1);">' +
       '<div style="height:58px; flex:0 0 auto;"></div>' +
-      '<div style="flex:1; overflow-y:auto; position:relative;">' +
+      '<div data-scroll="1" style="flex:1; overflow-y:auto; position:relative;">' +
         '<div style="padding:6px 20px 14px;">' +
           '<div style="display:flex; justify-content:space-between; align-items:flex-start;">' +
-            '<div><div style="font-size:12.5px; color:#7C7565; font-weight:600; letter-spacing:.03em; text-transform:uppercase;">Добро пожаловать</div>' +
-            '<div style="font-family:\'Fraunces\',serif; font-size:22px; color:#12201C; margin-top:2px;">Найдём ваш дом</div></div>' +
-            '<div style="width:40px; height:40px; border-radius:12px; background:#12201C; color:#D9BD87; display:flex; align-items:center; justify-content:center; font-family:\'Fraunces\',serif; font-size:15px; font-weight:600; flex:0 0 auto;">А</div>' +
+            '<div><div style="font-size:12.5px; color:#7C7565; font-weight:600; letter-spacing:.03em; text-transform:uppercase;">Welcome back</div>' +
+            '<div style="font-family:\'Fraunces\',serif; font-size:22px; color:#12201C; margin-top:2px;">Let’s find your home</div></div>' +
+            '<div style="width:40px; height:40px; border-radius:12px; background:#12201C; color:#D9BD87; display:flex; align-items:center; justify-content:center; font-family:\'Fraunces\',serif; font-size:15px; font-weight:600; flex:0 0 auto;">A</div>' +
           '</div>' +
           '<div onclick="__go(\'search\')" style="margin-top:16px; display:flex; align-items:center; gap:10px; background:#FFFDF9; border:1px solid #E2D9C4; border-radius:14px; padding:12px 14px; cursor:pointer;">' +
             '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7C7565" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>' +
-            '<span style="font-size:14px; color:#A79E8B; font-weight:500;">Район, город или ЖК...</span>' +
+            '<span style="font-size:14px; color:#A79E8B; font-weight:500;">Neighborhood, city, or complex...</span>' +
           '</div>' +
           '<div style="display:flex; gap:8px; margin-top:14px; overflow-x:auto; padding-bottom:2px;">' + cityChips + '</div>' +
         '</div>' +
-        '<div style="display:flex; justify-content:space-between; align-items:baseline; padding:22px 20px 12px;"><div style="font-family:\'Fraunces\',serif; font-size:18px; color:#12201C;">Избранные объекты</div></div>' +
+        '<div style="display:flex; justify-content:space-between; align-items:baseline; padding:22px 20px 12px;"><div style="font-family:\'Fraunces\',serif; font-size:18px; color:#12201C;">Featured listings</div></div>' +
         '<div style="display:flex; gap:14px; padding:0 20px 6px; overflow-x:auto;">' + featuredHtml + '</div>' +
-        '<div style="display:flex; justify-content:space-between; align-items:baseline; padding:22px 20px 12px;"><div style="font-family:\'Fraunces\',serif; font-size:18px; color:#12201C;">Подборка для вас</div><div style="font-size:12px; color:#7C7565; font-weight:600;">' + recommended.length + ' объектов</div></div>' +
+        '<div style="display:flex; justify-content:space-between; align-items:baseline; padding:22px 20px 12px;"><div style="font-family:\'Fraunces\',serif; font-size:18px; color:#12201C;">Picked for you</div><div style="font-size:12px; color:#7C7565; font-weight:600;">' + recommended.length + ' listings</div></div>' +
         recommendedBlock +
         '<div style="height:8px;"></div>' +
       '</div>' +
@@ -267,9 +271,9 @@
 
   function screenSearch(){
     var filterDefs = [
-      { key: 'price', label: 'До 1.5 млн SAR' },
-      { key: 'beds', label: '2–3 спальни' },
-      { key: 'ready', label: 'Готовое жильё' }
+      { key: 'price', label: 'Up to SAR 1.5M' },
+      { key: 'beds', label: '2–3 bedrooms' },
+      { key: 'ready', label: 'Ready to move in' }
     ];
     var filterChips = filterDefs.map(function(f){
       var active = state.filters[f.key];
@@ -279,7 +283,7 @@
     var searchResults = properties
       .filter(function(p){ return !state.filters.price || p.priceNum <= 1500000; })
       .filter(function(p){ return !state.filters.beds || (p.beds >= 2 && p.beds <= 3); })
-      .filter(function(p){ return !state.filters.ready || p.deliveryQ === 'Готово'; });
+      .filter(function(p){ return !state.filters.ready || p.deliveryQ === 'Ready'; });
 
     var resultsBlock;
     if (searchResults.length > 0){
@@ -288,22 +292,22 @@
     } else {
       resultsBlock = '<div style="display:flex; flex-direction:column; align-items:center; text-align:center; padding:60px 40px 20px; color:#7C7565;">' +
         '<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#D9BD87" stroke-width="1.3" style="margin-bottom:14px;"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>' +
-        '<p style="font-size:12.5px; font-weight:600; line-height:1.6;">Ничего не найдено — попробуйте изменить фильтры</p></div>';
+        '<p style="font-size:12.5px; font-weight:600; line-height:1.6;">No results — try adjusting your filters</p></div>';
     }
 
     return '' +
     '<div style="height:100%; display:flex; flex-direction:column; animation:screenIn .32s cubic-bezier(0.22,1,0.36,1);">' +
       '<div style="height:58px; flex:0 0 auto;"></div>' +
-      '<div style="flex:1; overflow-y:auto; position:relative;">' +
+      '<div data-scroll="1" style="flex:1; overflow-y:auto; position:relative;">' +
         '<div style="padding:6px 20px 14px;">' +
-          '<div style="font-family:\'Fraunces\',serif; font-size:22px; color:#12201C; margin-top:6px;">Поиск объектов</div>' +
+          '<div style="font-family:\'Fraunces\',serif; font-size:22px; color:#12201C; margin-top:6px;">Search listings</div>' +
           '<div style="margin-top:16px; display:flex; align-items:center; gap:10px; background:#FFFDF9; border:1px solid #E2D9C4; border-radius:14px; padding:12px 14px;">' +
             '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7C7565" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>' +
-            '<span style="font-size:14px; color:#12201C; font-weight:600;">Найдено ' + searchResults.length + ' объекта</span>' +
+            '<span style="font-size:14px; color:#12201C; font-weight:600;">' + searchResults.length + ' listings found</span>' +
           '</div>' +
           '<div style="display:flex; gap:8px; margin-top:14px; overflow-x:auto; padding-bottom:2px;">' + filterChips + '</div>' +
         '</div>' +
-        '<div style="display:flex; justify-content:space-between; align-items:baseline; padding:10px 20px 12px;"><div style="font-family:\'Fraunces\',serif; font-size:18px; color:#12201C;">' + searchResults.length + ' объектов</div><div style="font-size:12px; font-weight:700; color:#B9924B;">По цене ↓</div></div>' +
+        '<div style="display:flex; justify-content:space-between; align-items:baseline; padding:10px 20px 12px;"><div style="font-family:\'Fraunces\',serif; font-size:18px; color:#12201C;">' + searchResults.length + ' listings</div><div style="font-size:12px; font-weight:700; color:#B9924B;">Price ↓</div></div>' +
         resultsBlock +
       '</div>' +
       bottomNav('search') +
@@ -319,7 +323,7 @@
 
     return '' +
     '<div style="height:100%; display:flex; flex-direction:column; animation:screenIn .32s cubic-bezier(0.22,1,0.36,1);">' +
-      '<div style="flex:1; overflow-y:auto; position:relative;">' +
+      '<div data-scroll="1" style="flex:1; overflow-y:auto; position:relative;">' +
         '<div style="height:280px; flex:0 0 auto; position:relative; background-image:url(\'' + p.img + '\'); background-size:cover; background-position:center;">' +
           '<div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(10,16,13,0.55) 0%, rgba(10,16,13,0) 30%, rgba(10,16,13,0.15) 100%);"></div>' +
           '<div style="position:absolute; top:16px; left:16px; right:16px; z-index:5; display:flex; justify-content:space-between;">' +
@@ -331,24 +335,24 @@
         '</div>' +
         '<div style="padding:20px; flex:1;">' +
           '<div style="font-family:\'Fraunces\',serif; font-size:27px; color:#12201C; font-weight:600;">' + fmtPrice(p.priceNum) + '</div>' +
-          '<div style="background:#2F4A3D; color:#DDEBE1; font-size:10px; font-weight:800; letter-spacing:.03em; padding:5px 10px; border-radius:999px; text-transform:uppercase; margin-top:6px; display:inline-block;">Проверено Trustum</div>' +
+          '<div style="background:#2F4A3D; color:#DDEBE1; font-size:10px; font-weight:800; letter-spacing:.03em; padding:5px 10px; border-radius:999px; text-transform:uppercase; margin-top:6px; display:inline-block;">Verified by Trustum</div>' +
           '<div style="font-size:16px; font-weight:700; color:#1E2F29; margin-top:12px;">' + esc(p.name) + '</div>' +
-          '<div style="font-size:13px; color:#7C7565; margin-top:4px; font-weight:600;">' + esc(p.loc) + ' · сдача ' + esc(p.deliveryQ) + '</div>' +
+          '<div style="font-size:13px; color:#7C7565; margin-top:4px; font-weight:600;">' + esc(p.loc) + ' · delivery ' + esc(p.deliveryQ) + '</div>' +
           '<div style="display:flex; gap:10px; margin-top:18px;">' +
-            [['спальни', p.beds], ['санузла', p.baths], ['м²', p.area], ['этаж', p.floor]].map(function(pair){
+            [['beds', p.beds], ['baths', p.baths], ['m²', p.area], ['floor', p.floor]].map(function(pair){
               return '<div style="flex:1; background:#FFFDF9; border:1px solid #E2D9C4; border-radius:14px; padding:12px 10px; text-align:center;">' +
                 '<div style="font-family:\'Fraunces\',serif; font-size:18px; color:#12201C; font-weight:600;">' + pair[1] + '</div>' +
                 '<div style="font-size:10.5px; color:#7C7565; font-weight:700; text-transform:uppercase; letter-spacing:.03em; margin-top:2px;">' + pair[0] + '</div></div>';
             }).join('') +
           '</div>' +
-          '<div style="font-family:\'Fraunces\',serif; font-size:16px; color:#12201C; margin-top:24px; margin-bottom:10px;">Описание</div>' +
+          '<div style="font-family:\'Fraunces\',serif; font-size:16px; color:#12201C; margin-top:24px; margin-bottom:10px;">Description</div>' +
           '<div style="font-size:13.5px; line-height:1.7; color:#4E4A3E; font-weight:500;">' + esc(p.desc) + '</div>' +
-          '<div style="font-family:\'Fraunces\',serif; font-size:16px; color:#12201C; margin-top:24px; margin-bottom:10px;">Удобства</div>' +
+          '<div style="font-family:\'Fraunces\',serif; font-size:16px; color:#12201C; margin-top:24px; margin-bottom:10px;">Amenities</div>' +
           '<div style="display:flex; flex-wrap:wrap; gap:8px;">' + amenitiesHtml + '</div>' +
           '<div style="margin-top:22px; background:#FFFDF9; border:1px solid #E2D9C4; border-radius:16px; padding:14px; display:flex; align-items:center; gap:12px;">' +
-            '<div style="width:46px; height:46px; border-radius:12px; background:#12201C; color:#D9BD87; display:flex; align-items:center; justify-content:center; font-family:\'Fraunces\',serif; font-weight:600; flex:0 0 auto;">ФБ</div>' +
-            '<div style="flex:1;"><div style="font-size:13.5px; font-weight:700; color:#12201C;">Фахад Бин Салем</div>' +
-            '<div style="font-size:11px; color:#7C7565; font-weight:600; margin-top:1px;">Персональный брокер Trustum Group</div></div>' +
+            '<div style="width:46px; height:46px; border-radius:12px; background:#12201C; color:#D9BD87; display:flex; align-items:center; justify-content:center; font-family:\'Fraunces\',serif; font-weight:600; flex:0 0 auto;">FB</div>' +
+            '<div style="flex:1;"><div style="font-size:13.5px; font-weight:700; color:#12201C;">Fahad Bin Salem</div>' +
+            '<div style="font-size:11px; color:#7C7565; font-weight:600; margin-top:1px;">Personal broker at Trustum Group</div></div>' +
             '<div style="display:flex; gap:8px;">' +
               '<div class="icon-btn" onclick="__onWhatsapp()" style="width:38px; height:38px; border-radius:11px; display:flex; align-items:center; justify-content:center; cursor:pointer; background:#EAF3EC; color:#2F4A3D;"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.5 0-10 4.5-10 10 0 1.8.5 3.5 1.3 5L2 22l5.2-1.4c1.4.8 3.1 1.2 4.8 1.2 5.5 0 10-4.5 10-10s-4.4-9.8-9.96-9.8zm5.8 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3.1s.8-2.2 1.1-2.5c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5.2.5.7 1.8.8 1.9.1.2.1.4 0 .6-.1.2-.2.4-.3.5-.2.2-.3.4-.1.7.2.4.9 1.5 1.9 2.4 1.3 1.2 2.4 1.5 2.8 1.7.3.2.5.1.7-.1.2-.2.8-.9 1-1.3.2-.3.4-.3.7-.2.3.1 1.7.8 2 1 .3.1.5.2.6.3.1.2.1.9-.1 1.6z"></path></svg></div>' +
               '<div class="icon-btn" onclick="__onCall()" style="width:38px; height:38px; border-radius:11px; display:flex; align-items:center; justify-content:center; cursor:pointer; background:#F1EADA; color:#B9924B;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.4 2.1L8 9.9a16 16 0 0 0 6 6l1.4-1.4a2 2 0 0 1 2.1-.4c.9.3 1.8.5 2.7.6a2 2 0 0 1 1.8 2z"></path></svg></div>' +
@@ -358,8 +362,8 @@
         '</div>' +
       '</div>' +
       '<div style="padding:14px 20px calc(env(safe-area-inset-bottom,0) + 16px); background:#FFFDF9; border-top:1px solid #E2D9C4; display:flex; gap:10px;">' +
-        '<button class="btn" onclick="__toggleFavoriteToast(' + p.id + ', event)" style="flex:1; border:1.5px solid #12201C; color:#12201C; background:none; border-radius:13px; font-weight:700; font-size:13.5px; padding:13px; cursor:pointer;">' + (fav ? '♥ В избранном' : '♡ Сохранить') + '</button>' +
-        '<button class="btn" onclick="__onBookViewing()" style="flex:1.3; background:#12201C; color:#D9BD87; border:none; border-radius:13px; font-weight:700; font-size:13.5px; padding:13px; cursor:pointer;">Записаться на показ</button>' +
+        '<button class="btn" onclick="__toggleFavoriteToast(' + p.id + ', event)" style="flex:1; border:1.5px solid #12201C; color:#12201C; background:none; border-radius:13px; font-weight:700; font-size:13.5px; padding:13px; cursor:pointer;">' + (fav ? '♥ Saved' : '♡ Save') + '</button>' +
+        '<button class="btn" onclick="__onBookViewing()" style="flex:1.3; background:#12201C; color:#D9BD87; border:none; border-radius:13px; font-weight:700; font-size:13.5px; padding:13px; cursor:pointer;">Book a Viewing</button>' +
       '</div>' +
     '</div>';
   }
@@ -373,14 +377,14 @@
     } else {
       block = '<div style="display:flex; flex-direction:column; align-items:center; text-align:center; padding:60px 40px 20px; color:#7C7565;">' +
         '<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#D9BD87" stroke-width="1.3" style="margin-bottom:14px;"><path d="M12 21s-7-4.6-9.5-9C.8 8.4 2.3 5 5.6 5c1.9 0 3.3 1 4.4 2.6C11.1 6 12.5 5 14.4 5c3.3 0 4.8 3.4 3.1 7-2.5 4.4-9.5 9-9.5 9z"></path></svg>' +
-        '<p style="font-size:12.5px; font-weight:600; line-height:1.6;">Пока нет сохранённых объектов —<br>нажмите ♡ на карточке, чтобы добавить</p></div>';
+        '<p style="font-size:12.5px; font-weight:600; line-height:1.6;">No saved listings yet —<br>tap ♡ on a card to add one</p></div>';
     }
     return '' +
     '<div style="height:100%; display:flex; flex-direction:column; animation:screenIn .32s cubic-bezier(0.22,1,0.36,1);">' +
       '<div style="height:58px; flex:0 0 auto;"></div>' +
-      '<div style="flex:1; overflow-y:auto; position:relative;">' +
-        '<div style="font-family:\'Fraunces\',serif; font-size:24px; color:#12201C; padding:8px 20px 4px;">Избранное</div>' +
-        '<div style="font-size:12.5px; color:#7C7565; padding:0 20px 14px; font-weight:600;">' + favList.length + ' сохранённых объекта</div>' +
+      '<div data-scroll="1" style="flex:1; overflow-y:auto; position:relative;">' +
+        '<div style="font-family:\'Fraunces\',serif; font-size:24px; color:#12201C; padding:8px 20px 4px;">Favorites</div>' +
+        '<div style="font-size:12.5px; color:#7C7565; padding:0 20px 14px; font-weight:600;">' + favList.length + ' saved listings</div>' +
         block +
       '</div>' +
       bottomNav('favorites') +
@@ -389,11 +393,11 @@
 
   function screenProfile(){
     var rows = [
-      { icon:'<path d="M12 21s-7-4.6-9.5-9C.8 8.4 2.3 5 5.6 5c1.9 0 3.3 1 4.4 2.6C11.1 6 12.5 5 14.4 5c3.3 0 4.8 3.4 3.1 7-2.5 4.4-9.5 9-9.5 9z"></path>', label:'Мои заявки на показ' },
-      { icon:'<rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M8 3v4M16 3v4M3 10h18"></path>', label:'История просмотров' },
-      { icon:'<path d="M4 4h16v4H4zM4 12h10M4 16h10"></path>', label:'Документы и договоры' },
-      { icon:'<circle cx="12" cy="12" r="9"></circle><path d="M12 8v4l3 2"></path>', label:'Уведомления' },
-      { icon:'<path d="M12 22s8-4.5 8-11V5l-8-3-8 3v6c0 6.5 8 11 8 11z"></path>', label:'Служба поддержки Trustum' }
+      { icon:'<path d="M12 21s-7-4.6-9.5-9C.8 8.4 2.3 5 5.6 5c1.9 0 3.3 1 4.4 2.6C11.1 6 12.5 5 14.4 5c3.3 0 4.8 3.4 3.1 7-2.5 4.4-9.5 9-9.5 9z"></path>', label:'My viewing requests' },
+      { icon:'<rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M8 3v4M16 3v4M3 10h18"></path>', label:'Browsing history' },
+      { icon:'<path d="M4 4h16v4H4zM4 12h10M4 16h10"></path>', label:'Documents & contracts' },
+      { icon:'<circle cx="12" cy="12" r="9"></circle><path d="M12 8v4l3 2"></path>', label:'Notifications' },
+      { icon:'<path d="M12 22s8-4.5 8-11V5l-8-3-8 3v6c0 6.5 8 11 8 11z"></path>', label:'Trustum support' }
     ];
     var rowsHtml = rows.map(function(r){
       return '<div style="margin:0 20px 10px; background:#FFFDF9; border:1px solid #E2D9C4; border-radius:14px; padding:14px 16px; display:flex; justify-content:space-between; align-items:center; font-size:13.5px; font-weight:700; color:#1E2F29; cursor:pointer;">' +
@@ -402,11 +406,11 @@
     return '' +
     '<div style="height:100%; display:flex; flex-direction:column; animation:screenIn .32s cubic-bezier(0.22,1,0.36,1);">' +
       '<div style="height:58px; flex:0 0 auto;"></div>' +
-      '<div style="flex:1; overflow-y:auto; position:relative;">' +
-        '<div style="font-family:\'Fraunces\',serif; font-size:24px; color:#12201C; padding:8px 20px 4px;">Профиль</div>' +
+      '<div data-scroll="1" style="flex:1; overflow-y:auto; position:relative;">' +
+        '<div style="font-family:\'Fraunces\',serif; font-size:24px; color:#12201C; padding:8px 20px 4px;">Profile</div>' +
         '<div style="margin:16px 20px 18px; background:#12201C; border-radius:18px; padding:20px; display:flex; align-items:center; gap:14px; position:relative; overflow:hidden;">' +
-          '<div style="width:54px; height:54px; border-radius:14px; background:#B9924B; color:#12201C; display:flex; align-items:center; justify-content:center; font-family:\'Fraunces\',serif; font-weight:700; font-size:19px; z-index:2; flex:0 0 auto;">АМ</div>' +
-          '<div style="z-index:2;"><div style="color:#FFFDF9; font-weight:700; font-size:15px;">Алишер Мухтаров</div>' +
+          '<div style="width:54px; height:54px; border-radius:14px; background:#B9924B; color:#12201C; display:flex; align-items:center; justify-content:center; font-family:\'Fraunces\',serif; font-weight:700; font-size:19px; z-index:2; flex:0 0 auto;">AM</div>' +
+          '<div style="z-index:2;"><div style="color:#FFFDF9; font-weight:700; font-size:15px;">Alisher Mukhtarov</div>' +
           '<div style="color:#A9B3AC; font-size:11.5px; margin-top:2px; font-weight:600;">alisher@example.com · +7 (7XX) XXX-XX-XX</div></div>' +
         '</div>' +
         rowsHtml +
@@ -420,6 +424,11 @@
 
   function render(){
     var root = document.getElementById('screen-root');
+    var prevScrollEl = root.querySelector('[data-scroll]');
+    var savedScrollTop = prevScrollEl ? prevScrollEl.scrollTop : 0;
+    var screenChanged = state.screen !== lastRenderedScreen;
+    lastRenderedScreen = state.screen;
+
     var html = '';
     if (state.screen === 'onboard') html = screenOnboard();
     else if (state.screen === 'home') html = screenHome();
@@ -428,10 +437,23 @@
     else if (state.screen === 'favorites') html = screenFavorites();
     else if (state.screen === 'profile') html = screenProfile();
 
+    // Only replay the entrance animation when actually switching screens —
+    // not on every in-place update (favorite toggle, filter tap, city switch).
+    if (!screenChanged){
+      html = html.replace(/animation:screenIn[^;"]*;?/, '');
+    }
+
     if (state.toast){
       html += '<div style="position:absolute; bottom:96px; left:50%; transform:translateX(-50%); background:#12201C; color:#D9BD87; padding:11px 18px; border-radius:12px; font-size:12.5px; font-weight:700; z-index:999; box-shadow:0 10px 30px rgba(0,0,0,0.3); white-space:nowrap; animation:toastIn 0.25s ease;">' + esc(state.toast) + '</div>';
     }
     root.innerHTML = html;
+
+    // Restore scroll position after an in-place update so toggling a favorite
+    // or a filter doesn't jump the list back to the top.
+    if (!screenChanged){
+      var newScrollEl = root.querySelector('[data-scroll]');
+      if (newScrollEl) newScrollEl.scrollTop = savedScrollTop;
+    }
 
     var isLight = !!LIGHT_TEXT_SCREENS[state.screen];
     var color = isLight ? '#FFFDF9' : '#12201C';
@@ -456,7 +478,18 @@
     stage.style.height = (874 * scale) + 'px';
   }
 
-  window.addEventListener('resize', fitPhone);
+  // Throttle resize handling to one paint per frame so dragging/rotating the
+  // window doesn't spam layout work and stutter the scale animation.
+  var resizePending = false;
+  window.addEventListener('resize', function(){
+    if (resizePending) return;
+    resizePending = true;
+    requestAnimationFrame(function(){
+      resizePending = false;
+      fitPhone();
+    });
+  });
+
   fitPhone();
   render();
 })();
